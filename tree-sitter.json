@@ -1,0 +1,33 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "systemrdl",
+      "camelcase": "SystemRDL",
+      "scope": "source.systemrdl",
+      "path": ".",
+      "file-types": [
+        "rdl"
+      ],
+      "injection-regex": "^(systemrdl|rdl)$"
+    }
+  ],
+  "metadata": {
+    "version": "0.8.0",
+    "license": "MIT",
+    "description": "SystemRDL grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "Aliaksei Chapyzhenka"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/SystemRDL/tree-sitter-systemrdl"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "node": true,
+    "rust": true
+  }
+}

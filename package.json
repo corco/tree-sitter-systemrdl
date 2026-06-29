@@ -2,45 +2,59 @@
   "name": "tree-sitter-systemrdl",
   "version": "0.8.0",
   "description": "SystemRDL grammar for tree-sitter",
+  "repository": "https://github.com/SystemRDL/tree-sitter-systemrdl",
+  "license": "MIT",
   "main": "bindings/node",
+  "types": "bindings/node",
   "scripts": {
-    "gen": "tree-sitter generate",
-    "install": "node bin/install.js",
-    "prepare": "node bin/install.js",
-    "test": "tree-sitter test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SystemRDL/tree-sitter-systemrdl.git"
+    "preinstall": "tree-sitter generate",
+    "generate": "tree-sitter generate",
+    "install": "node-gyp-build",
+    "lint": "eslint grammar.js",
+    "prestart": "tree-sitter build --wasm",
+    "start": "tree-sitter playground",
+    "test": "tree-sitter test && node --test bindings/node/*_test.js"
   },
   "author": "Aliaksei Chapyzhenka",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/SystemRDL/tree-sitter-systemrdl/issues"
   },
   "homepage": "https://github.com/SystemRDL/tree-sitter-systemrdl#readme",
   "files": [
-    "bin",
     "grammar.js",
+    "tree-sitter.json",
     "binding.gyp",
-    "src",
-    "bindings"
+    "prebuilds/**",
+    "bindings/node/*",
+    "bindings/rust/*",
+    "src/**",
+    "*.wasm"
   ],
   "keywords": [
-    "parser",
+    "incremental",
+    "parsing",
     "tree-sitter",
-    "verilog"
+    "systemrdl"
   ],
   "dependencies": {
-    "nan": "^2.14.2"
+    "node-addon-api": "^8.5.0",
+    "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
-    "@drom/eslint-config": "^0.12.0",
-    "eslint": "^8.56.0",
-    "node-addon-api": "^8.0.0",
-    "tree-sitter-cli": "^0.22.6"
+    "eslint": "^9.17.0",
+    "eslint-config-treesitter": "^1.0.2",
+    "prebuildify": "^6.0.1",
+    "tree-sitter-cli": "^0.25.10"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.25.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
   },
   "eslintConfig": {
-    "extends": "@drom/eslint-config/eslint8/node12"
+    "extends": "eslint-config-treesitter"
   }
 }

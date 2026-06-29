@@ -15,7 +15,10 @@ jobs:
     - name: npm install, build, and test
       run: |
         npm i
+        npm run generate
         npm test
         g++ --version
         wc -l src/parser.c
         wc -c build/Release/*.node
+    - name: cargo test
+      run: cargo test

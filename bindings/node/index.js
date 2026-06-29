@@ -1,23 +1,23 @@
-'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const root = path.join(__dirname, '../..');
+
+const binding = require('node-gyp-build')(root);
 
 try {
-  module.exports = require('../../build/Release/tree_sitter_systemrdl_binding');
-} catch (error1) {
-  if (error1.code !== 'MODULE_NOT_FOUND') {
-    throw error1;
-  }
-  try {
-    module.exports = require('../../build/Debug/tree_sitter_systemrdl_binding');
-  } catch (error2) {
-    if (error2.code !== 'MODULE_NOT_FOUND') {
-      throw error2;
-    }
-    throw error1;
-  }
-}
+  binding.nodeTypeInfo = require('../../src/node-types.json');
+} catch {}
 
-try {
-  module.exports.nodeTypeInfo = require('../../src/node-types.json');
-} catch (err) {
-  console.log(err);
-}
+Object.defineProperty(binding, 'nodeTypeInfo', {
+  configurable: true,
+  enumerable: true,
+  get() {
+    delete binding.nodeTypeInfo;
+    try {
+      binding.nodeTypeInfo = require('../../src/node-types.json');
+    } catch {}
+    return binding.nodeTypeInfo;
+  },
+});
+
+module.exports = binding;
