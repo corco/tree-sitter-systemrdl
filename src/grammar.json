@@ -15,6 +15,22 @@
       "members": [
         {
           "type": "SYMBOL",
+          "name": "preproc_ifndef"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "preproc_define"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "preproc_include"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "preproc_endif"
+        },
+        {
+          "type": "SYMBOL",
           "name": "component_def"
         },
         {
@@ -42,6 +58,83 @@
           "name": "property_assignment"
         }
       ]
+    },
+    "preproc_ifndef": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "`ifndef"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "id"
+        }
+      ]
+    },
+    "preproc_define": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "`define"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "id"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "IMMEDIATE_TOKEN",
+              "content": {
+                "type": "PATTERN",
+                "value": "[ \\t]+"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "macro_value"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        }
+      ]
+    },
+    "preproc_include": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "`include"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "string_literal"
+        }
+      ]
+    },
+    "preproc_endif": {
+      "type": "STRING",
+      "value": "`endif"
+    },
+    "macro_value": {
+      "type": "IMMEDIATE_TOKEN",
+      "content": {
+        "type": "PATTERN",
+        "value": "[^\\r\\n]+"
+      }
     },
     "property_definition": {
       "type": "SEQ",
@@ -1624,34 +1717,56 @@
       ]
     },
     "explicit_prop_modifier": {
-      "type": "SEQ",
+      "type": "CHOICE",
       "members": [
         {
           "type": "SYMBOL",
-          "name": "prop_mod"
+          "name": "builtin_property_modifier"
         },
         {
-          "type": "SYMBOL",
-          "name": "id"
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "builtin_property_modifier"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "builtin_property_name"
+                },
+                {
+                  "type": "SYMBOL",
+                  "name": "id"
+                }
+              ]
+            }
+          ]
         }
       ]
     },
     "explicit_encode_assignment": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "encode"
-        },
-        {
-          "type": "STRING",
-          "value": "="
-        },
-        {
-          "type": "SYMBOL",
-          "name": "id"
-        }
-      ]
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "encode"
+          },
+          {
+            "type": "STRING",
+            "value": "="
+          },
+          {
+            "type": "SYMBOL",
+            "name": "id"
+          }
+        ]
+      }
     },
     "explicit_prop_assignment": {
       "type": "CHOICE",
@@ -1705,29 +1820,33 @@
       ]
     },
     "post_encode_assignment": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "instance_ref"
-        },
-        {
-          "type": "STRING",
-          "value": "->"
-        },
-        {
-          "type": "STRING",
-          "value": "encode"
-        },
-        {
-          "type": "STRING",
-          "value": "="
-        },
-        {
-          "type": "SYMBOL",
-          "name": "id"
-        }
-      ]
+      "type": "PREC",
+      "value": 1,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "SYMBOL",
+            "name": "instance_ref"
+          },
+          {
+            "type": "STRING",
+            "value": "->"
+          },
+          {
+            "type": "STRING",
+            "value": "encode"
+          },
+          {
+            "type": "STRING",
+            "value": "="
+          },
+          {
+            "type": "SYMBOL",
+            "name": "id"
+          }
+        ]
+      }
     },
     "post_prop_assignment": {
       "type": "CHOICE",
@@ -1785,16 +1904,28 @@
         }
       ]
     },
-    "prop_mod": {
+    "builtin_property_modifier": {
       "type": "CHOICE",
       "members": [
         {
           "type": "STRING",
-          "value": "posedge"
+          "value": "activehigh"
         },
         {
           "type": "STRING",
-          "value": "negedge"
+          "value": "activelow"
+        },
+        {
+          "type": "STRING",
+          "value": "anded"
+        },
+        {
+          "type": "STRING",
+          "value": "async"
+        },
+        {
+          "type": "STRING",
+          "value": "bigendian"
         },
         {
           "type": "STRING",
@@ -1802,37 +1933,75 @@
         },
         {
           "type": "STRING",
+          "value": "bridge"
+        },
+        {
+          "type": "STRING",
+          "value": "counter"
+        },
+        {
+          "type": "STRING",
+          "value": "cpuif_reset"
+        },
+        {
+          "type": "STRING",
+          "value": "dontcompare"
+        },
+        {
+          "type": "STRING",
+          "value": "donttest"
+        },
+        {
+          "type": "STRING",
+          "value": "errextbus"
+        },
+        {
+          "type": "STRING",
+          "value": "field_reset"
+        },
+        {
+          "type": "STRING",
+          "value": "intr"
+        },
+        {
+          "type": "STRING",
           "value": "level"
         },
         {
           "type": "STRING",
+          "value": "littleendian"
+        },
+        {
+          "type": "STRING",
+          "value": "lsb0"
+        },
+        {
+          "type": "STRING",
+          "value": "msb0"
+        },
+        {
+          "type": "STRING",
+          "value": "negedge"
+        },
+        {
+          "type": "STRING",
           "value": "nonsticky"
-        }
-      ]
-    },
-    "prop_assignment_lhs": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "prop_keyword"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "id"
-        }
-      ]
-    },
-    "prop_keyword": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "sw"
         },
         {
           "type": "STRING",
-          "value": "hw"
+          "value": "ored"
+        },
+        {
+          "type": "STRING",
+          "value": "overflow"
+        },
+        {
+          "type": "STRING",
+          "value": "paritycheck"
+        },
+        {
+          "type": "STRING",
+          "value": "posedge"
         },
         {
           "type": "STRING",
@@ -1844,11 +2013,249 @@
         },
         {
           "type": "STRING",
+          "value": "rsvdset"
+        },
+        {
+          "type": "STRING",
+          "value": "rsvdsetX"
+        },
+        {
+          "type": "STRING",
+          "value": "shared"
+        },
+        {
+          "type": "STRING",
+          "value": "sharedextbus"
+        },
+        {
+          "type": "STRING",
+          "value": "singlepulse"
+        },
+        {
+          "type": "STRING",
+          "value": "sticky"
+        },
+        {
+          "type": "STRING",
+          "value": "stickybit"
+        },
+        {
+          "type": "STRING",
+          "value": "swacc"
+        },
+        {
+          "type": "STRING",
+          "value": "swmod"
+        },
+        {
+          "type": "STRING",
+          "value": "sync"
+        },
+        {
+          "type": "STRING",
+          "value": "threshold"
+        },
+        {
+          "type": "STRING",
+          "value": "underflow"
+        },
+        {
+          "type": "STRING",
           "value": "woclr"
         },
         {
           "type": "STRING",
           "value": "woset"
+        },
+        {
+          "type": "STRING",
+          "value": "xored"
+        }
+      ]
+    },
+    "builtin_property_name": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "accesswidth"
+        },
+        {
+          "type": "STRING",
+          "value": "addressing"
+        },
+        {
+          "type": "STRING",
+          "value": "alignment"
+        },
+        {
+          "type": "STRING",
+          "value": "decr"
+        },
+        {
+          "type": "STRING",
+          "value": "decrsaturate"
+        },
+        {
+          "type": "STRING",
+          "value": "decrvalue"
+        },
+        {
+          "type": "STRING",
+          "value": "decrwidth"
+        },
+        {
+          "type": "STRING",
+          "value": "desc"
+        },
+        {
+          "type": "STRING",
+          "value": "enable"
+        },
+        {
+          "type": "STRING",
+          "value": "encode"
+        },
+        {
+          "type": "STRING",
+          "value": "fieldwidth"
+        },
+        {
+          "type": "STRING",
+          "value": "haltenable"
+        },
+        {
+          "type": "STRING",
+          "value": "haltmask"
+        },
+        {
+          "type": "STRING",
+          "value": "hw"
+        },
+        {
+          "type": "STRING",
+          "value": "hwclr"
+        },
+        {
+          "type": "STRING",
+          "value": "hwenable"
+        },
+        {
+          "type": "STRING",
+          "value": "hwmask"
+        },
+        {
+          "type": "STRING",
+          "value": "hwset"
+        },
+        {
+          "type": "STRING",
+          "value": "incr"
+        },
+        {
+          "type": "STRING",
+          "value": "incrsaturate"
+        },
+        {
+          "type": "STRING",
+          "value": "incrthreshold"
+        },
+        {
+          "type": "STRING",
+          "value": "incrvalue"
+        },
+        {
+          "type": "STRING",
+          "value": "incrwidth"
+        },
+        {
+          "type": "STRING",
+          "value": "ispresent"
+        },
+        {
+          "type": "STRING",
+          "value": "mask"
+        },
+        {
+          "type": "STRING",
+          "value": "mementries"
+        },
+        {
+          "type": "STRING",
+          "value": "memwidth"
+        },
+        {
+          "type": "STRING",
+          "value": "name"
+        },
+        {
+          "type": "STRING",
+          "value": "next"
+        },
+        {
+          "type": "STRING",
+          "value": "onread"
+        },
+        {
+          "type": "STRING",
+          "value": "onwrite"
+        },
+        {
+          "type": "STRING",
+          "value": "precedence"
+        },
+        {
+          "type": "STRING",
+          "value": "regwidth"
+        },
+        {
+          "type": "STRING",
+          "value": "reset"
+        },
+        {
+          "type": "STRING",
+          "value": "resetsignal"
+        },
+        {
+          "type": "STRING",
+          "value": "saturate"
+        },
+        {
+          "type": "STRING",
+          "value": "signalwidth"
+        },
+        {
+          "type": "STRING",
+          "value": "sw"
+        },
+        {
+          "type": "STRING",
+          "value": "swwel"
+        },
+        {
+          "type": "STRING",
+          "value": "swwe"
+        },
+        {
+          "type": "STRING",
+          "value": "we"
+        },
+        {
+          "type": "STRING",
+          "value": "wel"
+        }
+      ]
+    },
+    "prop_assignment_lhs": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "builtin_property_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "id"
         }
       ]
     },
@@ -2043,7 +2450,11 @@
           "members": [
             {
               "type": "SYMBOL",
-              "name": "prop_keyword"
+              "name": "builtin_property_name"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "builtin_property_modifier"
             },
             {
               "type": "SYMBOL",
@@ -2069,7 +2480,24 @@
             },
             {
               "type": "SYMBOL",
-              "name": "prop_keyword"
+              "name": "builtin_property_name"
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "instance_ref"
+            },
+            {
+              "type": "STRING",
+              "value": "->"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "builtin_property_modifier"
             }
           ]
         },
@@ -2700,6 +3128,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "macro_identifier"
+        },
+        {
+          "type": "SYMBOL",
           "name": "accesstype_literal"
         },
         {
@@ -2904,9 +3336,37 @@
         }
       ]
     },
+    "macro_identifier": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "`"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[a-zA-Z_]\\w*"
+          }
+        ]
+      }
+    },
     "id": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z_]\\w*"
+      "type": "TOKEN",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "[a-zA-Z_]\\w*"
+          },
+          {
+            "type": "PATTERN",
+            "value": "\\\\[a-zA-Z_]\\w*"
+          }
+        ]
+      }
     },
     "comment": {
       "type": "TOKEN",

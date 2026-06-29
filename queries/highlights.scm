@@ -3,6 +3,25 @@
 (string_literal) @string
 (number) @number
 (boolean_literal) @boolean
+(macro_identifier) @constant
+
+; Preprocessor
+[
+  (preproc_ifndef)
+  (preproc_define)
+  (preproc_include)
+  (preproc_endif)
+] @keyword.directive
+
+[
+  (preproc_ifndef
+    (id))
+  (preproc_define
+    (id))
+] @constant
+
+(preproc_include
+  (string_literal) @string)
 
 ; Keywords
 [
@@ -90,8 +109,8 @@
 ] @type
 
 ; References and member-like names
-(prop_keyword) @property
-(prop_mod) @property
+(builtin_property_name) @property
+(builtin_property_modifier) @property
 
 [
   (component_inst
@@ -103,8 +122,6 @@
 ] @variable
 
 [
-  (prop_assignment_lhs
-    (id))
   (constraint_prop_assignment
     (id))
   (struct_literal_elem

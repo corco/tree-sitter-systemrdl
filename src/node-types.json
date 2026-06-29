@@ -79,6 +79,16 @@
     "fields": {}
   },
   {
+    "type": "builtin_property_modifier",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "builtin_property_name",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "casting_type",
     "named": true,
     "fields": {},
@@ -739,6 +749,22 @@
           "named": true
         },
         {
+          "type": "preproc_define",
+          "named": true
+        },
+        {
+          "type": "preproc_endif",
+          "named": true
+        },
+        {
+          "type": "preproc_ifndef",
+          "named": true
+        },
+        {
+          "type": "preproc_include",
+          "named": true
+        },
+        {
           "type": "property_assignment",
           "named": true
         },
@@ -953,11 +979,15 @@
       "required": true,
       "types": [
         {
-          "type": "id",
+          "type": "builtin_property_modifier",
           "named": true
         },
         {
-          "type": "prop_mod",
+          "type": "builtin_property_name",
+          "named": true
+        },
+        {
+          "type": "id",
           "named": true
         }
       ]
@@ -972,15 +1002,19 @@
       "required": true,
       "types": [
         {
+          "type": "builtin_property_modifier",
+          "named": true
+        },
+        {
+          "type": "builtin_property_name",
+          "named": true
+        },
+        {
           "type": "id",
           "named": true
         },
         {
           "type": "instance_ref",
-          "named": true
-        },
-        {
-          "type": "prop_keyword",
           "named": true
         }
       ]
@@ -1188,6 +1222,55 @@
     "fields": {}
   },
   {
+    "type": "preproc_define",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "id",
+          "named": true
+        },
+        {
+          "type": "macro_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "preproc_ifndef",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "id",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "preproc_include",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "string_literal",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "primary_literal",
     "named": true,
     "fields": {},
@@ -1209,6 +1292,10 @@
         },
         {
           "type": "enumerator_literal",
+          "named": true
+        },
+        {
+          "type": "macro_identifier",
           "named": true
         },
         {
@@ -1239,11 +1326,11 @@
       "required": true,
       "types": [
         {
-          "type": "id",
+          "type": "builtin_property_name",
           "named": true
         },
         {
-          "type": "prop_keyword",
+          "type": "id",
           "named": true
         }
       ]
@@ -1269,16 +1356,6 @@
     }
   },
   {
-    "type": "prop_keyword",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "prop_mod",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "prop_ref",
     "named": true,
     "fields": {},
@@ -1287,15 +1364,19 @@
       "required": true,
       "types": [
         {
+          "type": "builtin_property_modifier",
+          "named": true
+        },
+        {
+          "type": "builtin_property_name",
+          "named": true
+        },
+        {
           "type": "id",
           "named": true
         },
         {
           "type": "instance_ref",
-          "named": true
-        },
-        {
-          "type": "prop_keyword",
           "named": true
         }
       ]
@@ -1828,11 +1909,39 @@
     "named": false
   },
   {
+    "type": "`define",
+    "named": false
+  },
+  {
+    "type": "`ifndef",
+    "named": false
+  },
+  {
+    "type": "`include",
+    "named": false
+  },
+  {
     "type": "abstract",
     "named": false
   },
   {
     "type": "accesstype",
+    "named": false
+  },
+  {
+    "type": "accesswidth",
+    "named": false
+  },
+  {
+    "type": "activehigh",
+    "named": false
+  },
+  {
+    "type": "activelow",
+    "named": false
+  },
+  {
+    "type": "addressing",
     "named": false
   },
   {
@@ -1848,7 +1957,23 @@
     "named": false
   },
   {
+    "type": "alignment",
+    "named": false
+  },
+  {
     "type": "all",
+    "named": false
+  },
+  {
+    "type": "anded",
+    "named": false
+  },
+  {
+    "type": "async",
+    "named": false
+  },
+  {
+    "type": "bigendian",
     "named": false
   },
   {
@@ -1857,6 +1982,10 @@
   },
   {
     "type": "bothedge",
+    "named": false
+  },
+  {
+    "type": "bridge",
     "named": false
   },
   {
@@ -1881,7 +2010,47 @@
     "named": false
   },
   {
+    "type": "counter",
+    "named": false
+  },
+  {
+    "type": "cpuif_reset",
+    "named": false
+  },
+  {
+    "type": "decr",
+    "named": false
+  },
+  {
+    "type": "decrsaturate",
+    "named": false
+  },
+  {
+    "type": "decrvalue",
+    "named": false
+  },
+  {
+    "type": "decrwidth",
+    "named": false
+  },
+  {
     "type": "default",
+    "named": false
+  },
+  {
+    "type": "desc",
+    "named": false
+  },
+  {
+    "type": "dontcompare",
+    "named": false
+  },
+  {
+    "type": "donttest",
+    "named": false
+  },
+  {
+    "type": "enable",
     "named": false
   },
   {
@@ -1890,6 +2059,10 @@
   },
   {
     "type": "enum",
+    "named": false
+  },
+  {
+    "type": "errextbus",
     "named": false
   },
   {
@@ -1905,7 +2078,23 @@
     "named": false
   },
   {
+    "type": "field_reset",
+    "named": false
+  },
+  {
+    "type": "fieldwidth",
+    "named": false
+  },
+  {
     "type": "fullalign",
+    "named": false
+  },
+  {
+    "type": "haltenable",
+    "named": false
+  },
+  {
+    "type": "haltmask",
     "named": false
   },
   {
@@ -1913,8 +2102,44 @@
     "named": false
   },
   {
+    "type": "hwclr",
+    "named": false
+  },
+  {
+    "type": "hwenable",
+    "named": false
+  },
+  {
+    "type": "hwmask",
+    "named": false
+  },
+  {
+    "type": "hwset",
+    "named": false
+  },
+  {
     "type": "id",
     "named": true
+  },
+  {
+    "type": "incr",
+    "named": false
+  },
+  {
+    "type": "incrsaturate",
+    "named": false
+  },
+  {
+    "type": "incrthreshold",
+    "named": false
+  },
+  {
+    "type": "incrvalue",
+    "named": false
+  },
+  {
+    "type": "incrwidth",
+    "named": false
   },
   {
     "type": "inside",
@@ -1933,7 +2158,35 @@
     "named": false
   },
   {
+    "type": "intr",
+    "named": false
+  },
+  {
+    "type": "ispresent",
+    "named": false
+  },
+  {
     "type": "level",
+    "named": false
+  },
+  {
+    "type": "littleendian",
+    "named": false
+  },
+  {
+    "type": "lsb0",
+    "named": false
+  },
+  {
+    "type": "macro_identifier",
+    "named": true
+  },
+  {
+    "type": "macro_value",
+    "named": true
+  },
+  {
+    "type": "mask",
     "named": false
   },
   {
@@ -1941,11 +2194,31 @@
     "named": false
   },
   {
+    "type": "mementries",
+    "named": false
+  },
+  {
+    "type": "memwidth",
+    "named": false
+  },
+  {
+    "type": "msb0",
+    "named": false
+  },
+  {
     "type": "na",
     "named": false
   },
   {
+    "type": "name",
+    "named": false
+  },
+  {
     "type": "negedge",
+    "named": false
+  },
+  {
+    "type": "next",
     "named": false
   },
   {
@@ -1954,10 +2227,14 @@
   },
   {
     "type": "number",
-    "named": true
+    "named": false
   },
   {
     "type": "number",
+    "named": true
+  },
+  {
+    "type": "onread",
     "named": false
   },
   {
@@ -1965,12 +2242,36 @@
     "named": false
   },
   {
+    "type": "onwrite",
+    "named": false
+  },
+  {
     "type": "onwritetype",
+    "named": false
+  },
+  {
+    "type": "ored",
+    "named": false
+  },
+  {
+    "type": "overflow",
+    "named": false
+  },
+  {
+    "type": "paritycheck",
     "named": false
   },
   {
     "type": "posedge",
     "named": false
+  },
+  {
+    "type": "precedence",
+    "named": false
+  },
+  {
+    "type": "preproc_endif",
+    "named": true
   },
   {
     "type": "property",
@@ -2005,7 +2306,27 @@
     "named": false
   },
   {
+    "type": "regwidth",
+    "named": false
+  },
+  {
+    "type": "reset",
+    "named": false
+  },
+  {
+    "type": "resetsignal",
+    "named": false
+  },
+  {
     "type": "rset",
+    "named": false
+  },
+  {
+    "type": "rsvdset",
+    "named": false
+  },
+  {
+    "type": "rsvdsetX",
     "named": false
   },
   {
@@ -2021,12 +2342,40 @@
     "named": false
   },
   {
+    "type": "saturate",
+    "named": false
+  },
+  {
+    "type": "shared",
+    "named": false
+  },
+  {
+    "type": "sharedextbus",
+    "named": false
+  },
+  {
     "type": "signal",
+    "named": false
+  },
+  {
+    "type": "signalwidth",
     "named": false
   },
   {
     "type": "signing",
     "named": true
+  },
+  {
+    "type": "singlepulse",
+    "named": false
+  },
+  {
+    "type": "sticky",
+    "named": false
+  },
+  {
+    "type": "stickybit",
+    "named": false
   },
   {
     "type": "string",
@@ -2041,7 +2390,31 @@
     "named": false
   },
   {
+    "type": "swacc",
+    "named": false
+  },
+  {
+    "type": "swmod",
+    "named": false
+  },
+  {
+    "type": "swwe",
+    "named": false
+  },
+  {
+    "type": "swwel",
+    "named": false
+  },
+  {
+    "type": "sync",
+    "named": false
+  },
+  {
     "type": "this",
+    "named": false
+  },
+  {
+    "type": "threshold",
     "named": false
   },
   {
@@ -2050,6 +2423,10 @@
   },
   {
     "type": "type",
+    "named": false
+  },
+  {
+    "type": "underflow",
     "named": false
   },
   {
@@ -2062,6 +2439,14 @@
   },
   {
     "type": "wclr",
+    "named": false
+  },
+  {
+    "type": "we",
+    "named": false
+  },
+  {
+    "type": "wel",
     "named": false
   },
   {
@@ -2098,6 +2483,10 @@
   },
   {
     "type": "wzt",
+    "named": false
+  },
+  {
+    "type": "xored",
     "named": false
   },
   {

@@ -22,6 +22,10 @@ const rules = {
   source_file: $ => repeat($.description),
 
   description: $ => choice(
+    $.preproc_ifndef,
+    $.preproc_define,
+    $.preproc_include,
+    $.preproc_endif,
     $.component_def,
     $.enum_def,
     $.property_definition,
@@ -32,6 +36,16 @@ const rules = {
   ),
 
   // B.2 User-defined properties
+
+  preproc_ifndef: $ => seq('`ifndef', $.id),
+
+  preproc_define: $ => seq('`define', $.id, optional(token.immediate(/[ \t]+/)), optional($.macro_value)),
+
+  preproc_include: $ => seq('`include', $.string_literal),
+
+  preproc_endif: $ => '`endif',
+
+  macro_value: $ => token.immediate(/[^\r\n]+/),
 
   property_definition: $ => seq('property', $.id, '{', $.property_body, '}', ';'),
 
@@ -231,9 +245,12 @@ const rules = {
     seq(optional('default'), $.explicit_prop_assignment, ';')
   ),
 
-  explicit_prop_modifier: $ => seq($.prop_mod, $.id),
+  explicit_prop_modifier: $ => choice(
+    $.builtin_property_modifier,
+    seq($.builtin_property_modifier, choice($.builtin_property_name, $.id))
+  ),
 
-  explicit_encode_assignment: $ => seq('encode', '=', $.id),
+  explicit_encode_assignment: $ => prec(1, seq('encode', '=', $.id)),
 
   explicit_prop_assignment: $ => choice(
     seq(
@@ -245,21 +262,106 @@ const rules = {
     $.explicit_encode_assignment
   ),
 
-  post_encode_assignment: $ => seq($.instance_ref, '->', 'encode', '=', $.id),
+  post_encode_assignment: $ => prec(1, seq($.instance_ref, '->', 'encode', '=', $.id)),
 
   post_prop_assignment: $ => choice(
     seq($.prop_ref, optseq('=', $.prop_assignment_rhs), ';'),
     seq($.post_encode_assignment, ';')
   ),
 
-  prop_mod: $ => choice('posedge', 'negedge', 'bothedge', 'level', 'nonsticky'),
-
-  prop_assignment_lhs: $ => choice(
-    $.prop_keyword,
-    $.id
+  builtin_property_modifier: $ => choice(
+    'activehigh',
+    'activelow',
+    'anded',
+    'async',
+    'bigendian',
+    'bothedge',
+    'bridge',
+    'counter',
+    'cpuif_reset',
+    'dontcompare',
+    'donttest',
+    'errextbus',
+    'field_reset',
+    'intr',
+    'level',
+    'littleendian',
+    'lsb0',
+    'msb0',
+    'negedge',
+    'nonsticky',
+    'ored',
+    'overflow',
+    'paritycheck',
+    'posedge',
+    'rclr',
+    'rset',
+    'rsvdset',
+    'rsvdsetX',
+    'shared',
+    'sharedextbus',
+    'singlepulse',
+    'sticky',
+    'stickybit',
+    'swacc',
+    'swmod',
+    'sync',
+    'threshold',
+    'underflow',
+    'woclr',
+    'woset',
+    'xored'
   ),
 
-  prop_keyword: $ => choice('sw', 'hw', 'rclr', 'rset', 'woclr', 'woset'),
+  builtin_property_name: $ => choice(
+    'accesswidth',
+    'addressing',
+    'alignment',
+    'decr',
+    'decrsaturate',
+    'decrvalue',
+    'decrwidth',
+    'desc',
+    'enable',
+    'encode',
+    'fieldwidth',
+    'haltenable',
+    'haltmask',
+    'hw',
+    'hwclr',
+    'hwenable',
+    'hwmask',
+    'hwset',
+    'incr',
+    'incrsaturate',
+    'incrthreshold',
+    'incrvalue',
+    'incrwidth',
+    'ispresent',
+    'mask',
+    'mementries',
+    'memwidth',
+    'name',
+    'next',
+    'onread',
+    'onwrite',
+    'precedence',
+    'regwidth',
+    'reset',
+    'resetsignal',
+    'saturate',
+    'signalwidth',
+    'sw',
+    'swwel',
+    'swwe',
+    'we',
+    'wel'
+  ),
+
+  prop_assignment_lhs: $ => choice(
+    $.builtin_property_name,
+    $.id
+  ),
 
   prop_assignment_rhs: $ => choice(
     $.constant_expression,
@@ -284,10 +386,11 @@ const rules = {
 
   instance_ref: $ => sep1('.', $.instance_ref_element),
 
-  prop_ref: $ => seq($.instance_ref, '->', choice($.prop_keyword, $.id)),
+  prop_ref: $ => seq($.instance_ref, '->', choice($.builtin_property_name, $.builtin_property_modifier, $.id)),
 
   instance_or_prop_ref: $ => choice(
-    seq($.instance_ref, '->', $.prop_keyword),
+    seq($.instance_ref, '->', $.builtin_property_name),
+    seq($.instance_ref, '->', $.builtin_property_modifier),
     seq($.instance_ref, '->', $.id),
     $.instance_ref
   ),
@@ -407,6 +510,7 @@ const rules = {
     $.number,
     $.string_literal,
     $.boolean_literal,
+    $.macro_identifier,
     $.accesstype_literal,
     $.onreadtype_literal,
     $.onwritetype_literal,
@@ -434,7 +538,12 @@ const rules = {
 
   // B.17 Identifiers
 
-  id: $ => /[a-zA-Z_]\w*/,
+  macro_identifier: $ => token(seq('`', /[a-zA-Z_]\w*/)),
+
+  id: $ => token(choice(
+    /[a-zA-Z_]\w*/,
+    /\\[a-zA-Z_]\w*/
+  )),
 
   // 4.2 Comments
 
